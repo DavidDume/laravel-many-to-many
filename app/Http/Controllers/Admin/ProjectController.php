@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,8 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        return view('admin.projects.create', compact('types'));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -44,13 +46,18 @@ class ProjectController extends Controller
             'title' => 'required|max:150',
             'link' => 'required|max:100',
             'description' => 'nullable|max:65535',
-            'type_id' => 'nullable|exists:types,id'
+            'type_id' => 'nullable|exists:types,id',
+            'technologies' => 'exists:technologies,id'
         ]);
 
+        $newProject = new Project();
+        if ($request->has('technologies')) {
+            $newProject->technologies()->attach($request->technologies);
+        }
         $data = $request->all();
 
-        $newProject = new Project();
         $newProject->fill($data);
+
         $newProject->save();
 
         return redirect()->route('admin.projects.show', ['project' => $newProject->id]);

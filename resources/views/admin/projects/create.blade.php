@@ -38,6 +38,15 @@
                 <div class="alert alert-danger">{{$message}}</div>
             @enderror
         </div>
+
+        <div class="mb-3">
+            
+            @foreach ($technologies as $tech) 
+                <label for="tech_{{$tech->id}}" class="form-label">{{$tech->name}}</label>
+                <input type="checkbox" id="tech_{{$tech->id}}" value="{{$tech->id}}" name="technologies[]">
+                
+            @endforeach
+        </div>
         
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
