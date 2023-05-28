@@ -51,14 +51,16 @@ class ProjectController extends Controller
         ]);
 
         $newProject = new Project();
-        if ($request->has('technologies')) {
-            $newProject->technologies()->attach($request->technologies);
-        }
+
         $data = $request->all();
 
         $newProject->fill($data);
 
         $newProject->save();
+
+        if ($request->has('technologies')) {
+            $newProject->technologies()->attach($request->technologies);
+        }
 
         return redirect()->route('admin.projects.show', ['project' => $newProject->id]);
     }
@@ -85,7 +87,8 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**

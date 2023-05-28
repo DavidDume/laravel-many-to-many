@@ -39,6 +39,21 @@
                 <div class="alert alert-danger">{{$message}}</div>
             @enderror
         </div>
+
+        <div class="mb-3">
+            
+            @foreach ($technologies as $tech) 
+                <label for="tech_{{$tech->id}}" class="form-label">{{$tech->name}}</label>
+                @if ($errors->any())
+                    <input type="checkbox" id="tech_{{$tech->id}}"  @if (in_array($tech->id, old('tags', []))) checked @endif  value="{{$tech->id}}" name="technologies[]">
+                @else
+                <input type="checkbox" id="tech_{{$tech->id}}"  @if ($project->technologies->contains($tech->id)) checked @endif  value="{{$tech->id}}" name="technologies[]">
+                @endif
+            @endforeach
+            @error('technologies')
+                <div class="alert alert-danger">{{$message}}</div>
+            @enderror
+        </div>
         
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
