@@ -103,10 +103,13 @@ class ProjectController extends Controller
         $request->validate([
             'title' => 'required|max:150',
             'link' => 'required|max:100',
-            'description' => 'nullable|max:65535'
+            'description' => 'nullable|max:65535',
+            'technologies' => 'exists:technologies,id'
         ]);
 
         $project = Project::findOrFail($id);
+
+        $project->technologies()->sync($request->technologies);
 
         $data = $request->all();
         $project->update($data);
